@@ -72,7 +72,7 @@ void QQuickChromiumWebView::SetNavState(bool cangoback, bool cangoforward)
 
 void QQuickChromiumWebView::OnAfterCreated()
 {
-    qDebug() << Q_FUNC_INFO;
+
 }
 
 void QQuickChromiumWebView::OnTakeFocus()

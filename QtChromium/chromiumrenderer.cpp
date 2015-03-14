@@ -16,8 +16,6 @@ namespace ChromiumRenderer
 
             virtual void OnFocusedNodeChanged(CefRefPtr<ChromiumApplication> app, CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefDOMNode> node)
             {
-                qDebug() << Q_FUNC_INFO;
-
                 bool iseditable = (node.get()) && node->IsEditable();
 
                 if(iseditable && !this->_lastnodeiseditable)

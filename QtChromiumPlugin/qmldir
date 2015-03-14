@@ -1,0 +1,3 @@
+module QtChromium
+plugin Qt5ChromiumPlugin
+

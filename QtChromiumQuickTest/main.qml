@@ -4,12 +4,12 @@ import QtChromium 1.0
 
 ApplicationWindow
 {
+    id: mainwindow
     title: qsTr("QtChromium Test")
     width: 640
     height: 480
     visible: true
 
-    //ChromiumWebView
     Column
     {
         anchors.fill: parent
@@ -40,11 +40,15 @@ ApplicationWindow
             }
         }
 
-        ChromiumWebPage
+        ChromiumWebView
         {
             id: chromiumwebview
             width: parent.width
             height: parent.height - row.height
+
+            onTitleChanged: {
+                mainwindow.title = chromiumwebview.title;
+            }
         }
     }
 }

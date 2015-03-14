@@ -14,10 +14,12 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
     Q_DISABLE_COPY(QQuickChromiumWebView)
 
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
 
     public:
         QQuickChromiumWebView(QQuickItem *webview = 0);
         ~QQuickChromiumWebView();
+        QString title();
         QString url();
         void setUrl(const QString& url);
 
@@ -46,6 +48,7 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
 
     signals:
         void urlChanged();
+        void titleChanged();
 
     private slots:
         void createBrowser();
@@ -56,6 +59,7 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         const void* _buffer;
         int _texwidth;
         int _texheight;
+        QString _title;
         QSGTexture* _texture;
         CefRefPtr<ChromiumHandler> _handler;
 };

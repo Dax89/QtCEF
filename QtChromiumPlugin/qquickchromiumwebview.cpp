@@ -21,6 +21,11 @@ QQuickChromiumWebView::~QQuickChromiumWebView()
 
 }
 
+QString QQuickChromiumWebView::title()
+{
+    return this->_title;
+}
+
 QString QQuickChromiumWebView::url()
 {
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
@@ -50,7 +55,9 @@ void QQuickChromiumWebView::OnAddressChange(const QString &url)
 
 void QQuickChromiumWebView::OnTitleChange(const QString &title)
 {
+    this->_title = title;
 
+    emit titleChanged();
 }
 
 void QQuickChromiumWebView::SetLoading(bool isloading)

@@ -12,12 +12,10 @@ uri = QtChromium
 # Input
 SOURCES += \
     qtchromiumplugin_plugin.cpp \
-    webpagerenderer.cpp \
     qquickchromiumwebview.cpp
 
 HEADERS += \
     qtchromiumplugin_plugin.h \
-    webpagerenderer.h \
     qquickchromiumwebview.h
 
 DISTFILES = qmldir

@@ -26,6 +26,11 @@ void ChromiumHandler::SetListener(ChromiumHandler::Listener *listener)
     this->_listener = listener;
 }
 
+bool ChromiumHandler::FocusOnEditableField() const
+{
+    return this->_focusoneditablefield;
+}
+
 CefRefPtr<CefBrowser> ChromiumHandler::GetBrowser() const
 {
      return this->_browser;
@@ -177,9 +182,6 @@ bool ChromiumHandler::OnRequestGeolocationPermission(CefRefPtr<CefBrowser>, cons
 
 bool ChromiumHandler::OnPreKeyEvent(CefRefPtr<CefBrowser>, const CefKeyEvent& event, XEvent*, bool*)
 {
-    if(!event.focus_on_editable_field)
-        return true;
-
     return false;
 }
 

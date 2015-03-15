@@ -44,6 +44,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
 
     public:
         void SetListener(Listener* listener);
+        bool FocusOnEditableField() const;
         CefRefPtr<CefBrowser> GetBrowser() const;
 
     protected:

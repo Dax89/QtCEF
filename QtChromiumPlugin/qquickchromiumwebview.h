@@ -45,6 +45,9 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
 
     private:
         QSGTexture* renewTexture();
+        CefBrowserHost::MouseButtonType getMouseButtons(QMouseEvent* mouseevent);
+        uint32 getMouseModifiers(QMouseEvent* mouseevent);
+        uint32 getKeyModifiers(QKeyEvent* keyevent);
 
     signals:
         void urlChanged();

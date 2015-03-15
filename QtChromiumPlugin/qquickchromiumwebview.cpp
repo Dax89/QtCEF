@@ -123,60 +123,42 @@ void QQuickChromiumWebView::focusOutEvent(QFocusEvent *focusevent)
 
 void QQuickChromiumWebView::mousePressEvent(QMouseEvent *mouseevent)
 {
-    CefBrowserHost::MouseButtonType mbt;
-    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
-
     CefMouseEvent cefmouseevent;
     cefmouseevent.x = mouseevent->x();
     cefmouseevent.y = mouseevent->y();
+    cefmouseevent.modifiers = this->getMouseModifiers(mouseevent);
 
-    if(mouseevent->button() == Qt::LeftButton)
-    {
-        this->forceActiveFocus();
-        mbt = MBT_LEFT;
-    }
-    else if(mouseevent->button() == Qt::RightButton)
-        mbt = MBT_RIGHT;
-    else if(mouseevent->button() == Qt::MiddleButton)
-        mbt = MBT_MIDDLE;
-    else
-        return;
-
-    browser->GetHost()->SendMouseClickEvent(cefmouseevent, mbt, false, 1);
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->GetHost()->SendMouseClickEvent(cefmouseevent, this->getMouseButtons(mouseevent), false, 1);
 }
 
 void QQuickChromiumWebView::mouseReleaseEvent(QMouseEvent *mouseevent)
 {
-    CefBrowserHost::MouseButtonType mbt;
-    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
-
     CefMouseEvent cefmouseevent;
     cefmouseevent.x = mouseevent->x();
     cefmouseevent.y = mouseevent->y();
 
-    if(mouseevent->button() == Qt::LeftButton)
-        mbt = MBT_LEFT;
-    else if(mouseevent->button() == Qt::RightButton)
-        mbt = MBT_RIGHT;
-    else if(mouseevent->button() == Qt::MiddleButton)
-        mbt = MBT_MIDDLE;
-    else
-        return;
-
-    browser->GetHost()->SendMouseClickEvent(cefmouseevent, mbt, true, 1);
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->GetHost()->SendMouseClickEvent(cefmouseevent, this->getMouseButtons(mouseevent), true, 1);
 }
 
 void QQuickChromiumWebView::keyPressEvent(QKeyEvent *keyevent)
 {
-    qDebug() << Q_FUNC_INFO;
-
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
-
     CefKeyEvent cefkeyevent;
-    cefkeyevent.type = KEYEVENT_CHAR;
-    cefkeyevent.character = keyevent->text()[0].toLatin1();
 
+    cefkeyevent.type = KEYEVENT_RAWKEYDOWN;
+    cefkeyevent.modifiers = this->getKeyModifiers(keyevent);
+    cefkeyevent.windows_key_code = keyevent->nativeVirtualKey() & 0x00FF;
+    cefkeyevent.native_key_code = keyevent->nativeVirtualKey();
     browser->GetHost()->SendKeyEvent(cefkeyevent);
+
+    if(!keyevent->text().isEmpty())
+    {
+        cefkeyevent.type = KEYEVENT_CHAR;
+        cefkeyevent.character = keyevent->text().at(0).unicode();
+        browser->GetHost()->SendKeyEvent(cefkeyevent);
+    }
 }
 
 QSGNode *QQuickChromiumWebView::updatePaintNode(QSGNode *oldnode, QQuickItem::UpdatePaintNodeData *)
@@ -222,6 +204,54 @@ QSGTexture *QQuickChromiumWebView::renewTexture()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->_texwidth, this->_texheight, 0, GL_BGRA, GL_UNSIGNED_BYTE, this->_buffer);
 
     return texture;
+}
+
+CefBrowserHost::MouseButtonType QQuickChromiumWebView::getMouseButtons(QMouseEvent *mouseevent)
+{
+    if (mouseevent->button() == Qt::LeftButton || (mouseevent->buttons() & Qt::LeftButton))
+        return MBT_LEFT;
+    else if (mouseevent->button() == Qt::RightButton || (mouseevent->buttons() & Qt::RightButton))
+        return MBT_RIGHT;
+    else if (mouseevent->button() == Qt::MidButton || (mouseevent->buttons() & Qt::MidButton))
+        return MBT_MIDDLE;
+
+    return static_cast<CefBrowserHost::MouseButtonType>(0);
+}
+
+uint32 QQuickChromiumWebView::getMouseModifiers(QMouseEvent *mouseevent)
+{
+    uint mbt = EVENTFLAG_NONE;
+
+    if(mouseevent->buttons() & Qt::LeftButton)
+        mbt |= EVENTFLAG_LEFT_MOUSE_BUTTON;
+
+    if(mouseevent->buttons() & Qt::RightButton)
+        mbt |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
+
+    if(mouseevent->buttons() & Qt::MiddleButton)
+        mbt |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
+
+    return mbt;
+}
+
+uint32 QQuickChromiumWebView::getKeyModifiers(QKeyEvent *keyevent)
+{
+    switch(keyevent->key())
+    {
+        case Qt::Key_Shift:
+            return EVENTFLAG_SHIFT_DOWN;
+
+        case Qt::Key_Alt:
+            return EVENTFLAG_ALT_DOWN;
+
+        case Qt::Key_Control:
+            return EVENTFLAG_CONTROL_DOWN;
+
+        default:
+            break;
+    }
+
+    return EVENTFLAG_NONE;
 }
 
 void QQuickChromiumWebView::onWindowChanged(QQuickWindow *window)

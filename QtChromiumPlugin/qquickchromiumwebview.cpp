@@ -143,6 +143,8 @@ void QQuickChromiumWebView::focusOutEvent(QFocusEvent *focusevent)
 
 void QQuickChromiumWebView::mousePressEvent(QMouseEvent *mouseevent)
 {
+    this->forceActiveFocus();
+
     CefMouseEvent cefmouseevent;
     cefmouseevent.x = mouseevent->x();
     cefmouseevent.y = mouseevent->y();

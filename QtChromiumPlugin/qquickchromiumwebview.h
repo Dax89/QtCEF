@@ -15,12 +15,18 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
 
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
+    Q_PROPERTY(bool canGoBack READ canGoBack NOTIFY canGoBackChanged)
+    Q_PROPERTY(bool canGoForward READ canGoForward NOTIFY canGoForwardChanged)
 
     public:
         QQuickChromiumWebView(QQuickItem *webview = 0);
         ~QQuickChromiumWebView();
-        QString title();
-        QString url();
+        bool loading() const;
+        bool canGoBack() const;
+        bool canGoForward() const;
+        QString title() const;
+        QString url() const;
         void setUrl(const QString& url);
 
     public: /* ChromiumHandler::Listener Methods */
@@ -29,8 +35,6 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         virtual void SetLoading(bool isloading);
         virtual void SetNavState(bool cangoback, bool cangoforward);
         virtual void OnAfterCreated();
-        virtual void OnTakeFocus();
-        virtual void OnGotFocus();
         virtual bool GetViewRect(CefRect &rect);
         virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height);
         virtual void OnMessageEvent(ChromiumMessageEvent* e);
@@ -67,6 +71,9 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         }
 
     signals:
+        void canGoBackChanged();
+        void canGoForwardChanged();
+        void loadingChanged();
         void urlChanged();
         void titleChanged();
 
@@ -76,10 +83,15 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         void onResize();
 
     private:
+        bool _cangoback;
+        bool _cangoforward;
+        bool _loading;
+        QString _title;
+
+    private:
         const void* _buffer;
         int _texwidth;
         int _texheight;
-        QString _title;
         QSGTexture* _texture;
         CefRefPtr<ChromiumHandler> _handler;
 };

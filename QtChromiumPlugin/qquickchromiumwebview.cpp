@@ -1,6 +1,6 @@
 #include "qquickchromiumwebview.h"
 
-QQuickChromiumWebView::QQuickChromiumWebView(QQuickItem *webview): QQuickItem(webview), _buffer(NULL), _texture(NULL)
+QQuickChromiumWebView::QQuickChromiumWebView(QQuickItem *webview): QQuickItem(webview), _cangoback(false), _cangoforward(false), _loading(false), _buffer(NULL), _texture(NULL)
 {
     this->setFlag(QQuickItem::ItemHasContents);
     this->setFlag(QQuickItem::ItemIsFocusScope);
@@ -22,12 +22,27 @@ QQuickChromiumWebView::~QQuickChromiumWebView()
 
 }
 
-QString QQuickChromiumWebView::title()
+bool QQuickChromiumWebView::loading() const
+{
+    return this->_loading;
+}
+
+bool QQuickChromiumWebView::canGoBack() const
+{
+    return this->_cangoback;
+}
+
+bool QQuickChromiumWebView::canGoForward() const
+{
+    return this->_cangoforward;
+}
+
+QString QQuickChromiumWebView::title() const
 {
     return this->_title;
 }
 
-QString QQuickChromiumWebView::url()
+QString QQuickChromiumWebView::url() const
 {
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
     return QString::fromStdWString(browser->GetMainFrame()->GetURL().ToWString());
@@ -63,25 +78,29 @@ void QQuickChromiumWebView::OnTitleChange(const QString &title)
 
 void QQuickChromiumWebView::SetLoading(bool isloading)
 {
+    if(this->_loading == isloading)
+        return;
 
+    this->_loading = isloading;
+    emit loadingChanged();
 }
 
 void QQuickChromiumWebView::SetNavState(bool cangoback, bool cangoforward)
 {
+    if(this->_cangoback != cangoback)
+    {
+        this->_cangoback = cangoback;
+        emit canGoBackChanged();
+    }
 
+    if(this->_cangoforward != cangoforward)
+    {
+        this->_cangoforward = cangoforward;
+        emit canGoForwardChanged();
+    }
 }
 
 void QQuickChromiumWebView::OnAfterCreated()
-{
-
-}
-
-void QQuickChromiumWebView::OnTakeFocus()
-{
-
-}
-
-void QQuickChromiumWebView::OnGotFocus()
 {
 
 }

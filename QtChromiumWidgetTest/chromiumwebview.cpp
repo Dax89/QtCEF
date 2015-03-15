@@ -59,11 +59,6 @@ void ChromiumWebView::OnAfterCreated()
 
 }
 
-void ChromiumWebView::OnGotFocus()
-{
-    this->setFocus();
-}
-
 bool ChromiumWebView::GetViewRect(CefRect &rect)
 {
     rect.Set(0, 0, this->width(), this->height());

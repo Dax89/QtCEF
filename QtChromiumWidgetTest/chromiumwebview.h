@@ -30,7 +30,6 @@ class ChromiumWebView : public QGLWidget, public ChromiumHandler::Listener
         virtual void SetLoading(bool isloading);
         virtual void SetNavState(bool cangoback, bool cangoforward);
         virtual void OnAfterCreated();
-        virtual void OnGotFocus();
         virtual bool GetViewRect(CefRect &rect);
         virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height);
         virtual void OnMessageEvent(ChromiumMessageEvent* e);

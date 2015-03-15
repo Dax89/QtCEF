@@ -187,25 +187,7 @@ bool ChromiumHandler::OnPreKeyEvent(CefRefPtr<CefBrowser>, const CefKeyEvent& ev
 
 bool ChromiumHandler::OnSetFocus(CefRefPtr<CefBrowser> browser, CefFocusHandler::FocusSource source)
 {
-    CEF_REQUIRE_UI_THREAD();
-    qDebug() << Q_FUNC_INFO;
-
     return false;
-}
-
-void ChromiumHandler::OnGotFocus(CefRefPtr<CefBrowser> browser)
-{
-    CEF_REQUIRE_UI_THREAD();
-    qDebug() << Q_FUNC_INFO;
-
-    if(this->_listener)
-        this->_listener->OnGotFocus();
-}
-
-void ChromiumHandler::OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next)
-{
-    CEF_REQUIRE_UI_THREAD();
-    qDebug() << Q_FUNC_INFO;
 }
 
 bool ChromiumHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame>, const CefString&, const CefString&, const CefPopupFeatures&, CefWindowInfo&, CefRefPtr<CefClient>&, CefBrowserSettings&, bool*)

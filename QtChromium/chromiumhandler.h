@@ -32,7 +32,6 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
                 virtual void SetLoading(bool isloading) = 0;
                 virtual void SetNavState(bool cangoback, bool cangoforward) = 0;
                 virtual void OnAfterCreated() = 0;
-                virtual void OnGotFocus() = 0;
                 virtual bool GetViewRect(CefRect &rect) = 0;
                 virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height) = 0;
                 virtual void OnMessageEvent(ChromiumMessageEvent* e) = 0;
@@ -89,8 +88,6 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
 
     public: /* CefFocusHandler Methods */
         virtual bool OnSetFocus(CefRefPtr<CefBrowser> browser, FocusSource source);
-        virtual void OnGotFocus(CefRefPtr<CefBrowser> browser);
-        virtual void OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next);
 
     public: /* CefLifeSpanHandler Methods */
         virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& targeturl, const CefString& targetframename, const CefPopupFeatures& popupfeatures, CefWindowInfo& windowinfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool*);

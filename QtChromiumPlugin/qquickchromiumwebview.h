@@ -40,14 +40,31 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         virtual void focusInEvent(QFocusEvent* focusevent);
         virtual void focusOutEvent(QFocusEvent* focusevent);
         virtual void mousePressEvent(QMouseEvent* mouseevent);
+        virtual void mouseMoveEvent(QMouseEvent *mouseevent);
         virtual void mouseReleaseEvent(QMouseEvent* mouseevent);
+        virtual void wheelEvent(QWheelEvent *wheelevent);
         virtual void keyPressEvent(QKeyEvent* keyevent);
 
     private:
         QSGTexture* renewTexture();
         CefBrowserHost::MouseButtonType getMouseButtons(QMouseEvent* mouseevent);
-        uint32 getMouseModifiers(QMouseEvent* mouseevent);
         uint32 getKeyModifiers(QKeyEvent* keyevent);
+
+        template<typename T> uint32 getMouseModifiers(T* event)
+        {
+            uint mbt = EVENTFLAG_NONE;
+
+            if(event->buttons() & Qt::LeftButton)
+                mbt |= EVENTFLAG_LEFT_MOUSE_BUTTON;
+
+            if(event->buttons() & Qt::RightButton)
+                mbt |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
+
+            if(event->buttons() & Qt::MiddleButton)
+                mbt |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
+
+            return mbt;
+        }
 
     signals:
         void urlChanged();

@@ -7,6 +7,7 @@ QQuickChromiumWebView::QQuickChromiumWebView(QQuickItem *webview): QQuickItem(we
     this->setFlag(QQuickItem::ItemAcceptsInputMethod);
 
     this->setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton | Qt::MiddleButton);
+    this->setAcceptHoverEvents(true);
     this->forceActiveFocus();
 
     this->_handler = CefRefPtr<ChromiumHandler>(new ChromiumHandler());
@@ -132,14 +133,41 @@ void QQuickChromiumWebView::mousePressEvent(QMouseEvent *mouseevent)
     browser->GetHost()->SendMouseClickEvent(cefmouseevent, this->getMouseButtons(mouseevent), false, 1);
 }
 
+void QQuickChromiumWebView::mouseMoveEvent(QMouseEvent *mouseevent)
+{
+    CefMouseEvent cefmouseevent;
+    cefmouseevent.x = mouseevent->x();
+    cefmouseevent.y = mouseevent->y();
+    cefmouseevent.modifiers = this->getMouseModifiers(mouseevent);
+
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->GetHost()->SendMouseMoveEvent(cefmouseevent, false);
+}
+
 void QQuickChromiumWebView::mouseReleaseEvent(QMouseEvent *mouseevent)
 {
     CefMouseEvent cefmouseevent;
     cefmouseevent.x = mouseevent->x();
     cefmouseevent.y = mouseevent->y();
+    cefmouseevent.modifiers = this->getMouseModifiers(mouseevent);
 
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
     browser->GetHost()->SendMouseClickEvent(cefmouseevent, this->getMouseButtons(mouseevent), true, 1);
+}
+
+void QQuickChromiumWebView::wheelEvent(QWheelEvent *wheelevent)
+{
+    CefMouseEvent cefmouseevent;
+    cefmouseevent.x = wheelevent->x();
+    cefmouseevent.y = wheelevent->y();
+    cefmouseevent.modifiers = this->getMouseModifiers(wheelevent);
+
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+
+    if(wheelevent->orientation() == Qt::Horizontal)
+        browser->GetHost()->SendMouseWheelEvent(cefmouseevent, (wheelevent->delta() / 120.0) * 3 * 20.0, 0);
+    else
+        browser->GetHost()->SendMouseWheelEvent(cefmouseevent, 0, (wheelevent->delta() / 120.0) * 3 * 20.0);
 }
 
 void QQuickChromiumWebView::keyPressEvent(QKeyEvent *keyevent)
@@ -216,22 +244,6 @@ CefBrowserHost::MouseButtonType QQuickChromiumWebView::getMouseButtons(QMouseEve
         return MBT_MIDDLE;
 
     return static_cast<CefBrowserHost::MouseButtonType>(0);
-}
-
-uint32 QQuickChromiumWebView::getMouseModifiers(QMouseEvent *mouseevent)
-{
-    uint mbt = EVENTFLAG_NONE;
-
-    if(mouseevent->buttons() & Qt::LeftButton)
-        mbt |= EVENTFLAG_LEFT_MOUSE_BUTTON;
-
-    if(mouseevent->buttons() & Qt::RightButton)
-        mbt |= EVENTFLAG_RIGHT_MOUSE_BUTTON;
-
-    if(mouseevent->buttons() & Qt::MiddleButton)
-        mbt |= EVENTFLAG_MIDDLE_MOUSE_BUTTON;
-
-    return mbt;
 }
 
 uint32 QQuickChromiumWebView::getKeyModifiers(QKeyEvent *keyevent)

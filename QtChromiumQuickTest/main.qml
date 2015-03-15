@@ -46,6 +46,10 @@ ApplicationWindow
             width: parent.width
             height: parent.height - row.height
 
+            onUrlChanged: {
+                tfurl.text = url;
+            }
+
             onTitleChanged: {
                 mainwindow.title = chromiumwebview.title;
             }

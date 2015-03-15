@@ -47,16 +47,40 @@ const QUrl& QQuickChromiumWebView::favicon() const
     return this->_favicon;
 }
 
-QString QQuickChromiumWebView::url() const
+QUrl QQuickChromiumWebView::url() const
 {
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
-    return QString::fromStdWString(browser->GetMainFrame()->GetURL().ToWString());
+    return QUrl(QString::fromStdWString(browser->GetMainFrame()->GetURL().ToWString()));
 }
 
-void QQuickChromiumWebView::setUrl(const QString &url)
+void QQuickChromiumWebView::setUrl(const QUrl &url)
 {
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
-    browser->GetMainFrame()->LoadURL(CefString(url.toStdWString()));
+    browser->GetMainFrame()->LoadURL(CefString(url.toString().toStdWString()));
+}
+
+void QQuickChromiumWebView::stop()
+{
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->StopLoad();
+}
+
+void QQuickChromiumWebView::reload()
+{
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->Reload();
+}
+
+void QQuickChromiumWebView::goBack()
+{
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->GoBack();
+}
+
+void QQuickChromiumWebView::goForward()
+{
+    CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
+    browser->GoForward();
 }
 
 void QQuickChromiumWebView::createBrowser()
@@ -88,15 +112,6 @@ void QQuickChromiumWebView::OnTitleChange(const QString &title)
     this->_title = title;
 
     emit titleChanged();
-}
-
-void QQuickChromiumWebView::SetLoading(bool isloading)
-{
-    if(this->_loading == isloading)
-        return;
-
-    this->_loading = isloading;
-    emit loadingChanged();
 }
 
 void QQuickChromiumWebView::SetNavState(bool cangoback, bool cangoforward)
@@ -206,6 +221,39 @@ void QQuickChromiumWebView::OnCursorChange(CefRenderHandler::CursorType type, co
             this->setCursor(Qt::ArrowCursor);
             break;
     }
+}
+
+void QQuickChromiumWebView::OnLoadStart(CefRefPtr<CefFrame> frame)
+{
+    this->_loading = true;
+
+    LoadRequest loadreq(QString::fromStdWString(frame->GetURL().ToWString()),
+                        LoadRequest::LoadStartedStatus);
+
+    emit loadingChanged(&loadreq);
+}
+
+void QQuickChromiumWebView::OnLoadEnd(CefRefPtr<CefFrame> frame, int httpstatuscode)
+{
+    this->_loading = false;
+
+    LoadRequest loadreq(QString::fromStdWString(frame->GetURL().ToWString()),
+                        LoadRequest::LoadSucceededStatus);
+
+    emit loadingChanged(&loadreq);
+}
+
+void QQuickChromiumWebView::OnLoadError(CefRefPtr<CefFrame> frame, CefLoadHandler::ErrorCode errorcode, const CefString &errortext, const CefString &failedurl)
+{
+    this->_loading = false;
+
+    LoadRequest loadreq(QString::fromStdWString(frame->GetURL().ToWString()),
+                        LoadRequest::LoadFailedStatus,
+                        QString::fromStdWString(errortext),
+                        QString(),
+                        errorcode);
+
+    emit loadingChanged(&loadreq);
 }
 
 void QQuickChromiumWebView::OnMessageEvent(ChromiumMessageEvent *e)

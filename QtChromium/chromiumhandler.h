@@ -28,15 +28,16 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
         {
             public:
                 virtual ~Listener() { }
+                virtual void SetNavState(bool cangoback, bool cangoforward) = 0;
+                virtual bool GetViewRect(CefRect &rect) = 0;
                 virtual void OnAddressChange(const QString& url) = 0;
                 virtual void OnTitleChange(const QString& title) = 0;
                 virtual void OnFaviconChange(const QUrl& url) = 0;
-                virtual void SetLoading(bool isloading) = 0;
-                virtual void SetNavState(bool cangoback, bool cangoforward) = 0;
-                virtual void OnAfterCreated() = 0;
-                virtual bool GetViewRect(CefRect &rect) = 0;
                 virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height) = 0;
                 virtual void OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo) = 0;
+                virtual void OnLoadStart(CefRefPtr<CefFrame> frame) = 0;
+                virtual void OnLoadEnd(CefRefPtr<CefFrame> frame, int httpstatuscode) = 0;
+                virtual void OnLoadError(CefRefPtr<CefFrame> frame, CefLoadHandler::ErrorCode errorcode, const CefString &errortext, const CefString &failedurl) = 0;
                 virtual void OnMessageEvent(ChromiumMessageEvent* e) = 0;
         };
 
@@ -50,7 +51,6 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
         CefRefPtr<CefBrowser> GetBrowser() const;
 
     protected:
-        void SetLoading(bool isloading);  /* *** Qt Side *** */
         void SetNavState(bool cangoback, bool cangoforward);  /* *** Qt Side *** */
 
     public: /* CefClient Methods */
@@ -103,7 +103,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
         virtual void OnLoadingStateChange(CefRefPtr<CefBrowser>, bool isloading, bool cangoback, bool cangoforward);
         virtual void OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame);
         virtual void OnLoadEnd(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, int httpstatuscode);
-        virtual void OnLoadError(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, ErrorCode errorcode, const CefString& errortext, const CefString& failedurl);
+        virtual void OnLoadError(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefLoadHandler::ErrorCode errorcode, const CefString& errortext, const CefString& failedurl);
 
     public: /* CefRenderHandler Methods */
         virtual bool GetViewRect(CefRefPtr<CefBrowser>, CefRect &rect);

@@ -33,7 +33,7 @@ bool ChromiumHandler::FocusOnEditableField() const
 
 CefRefPtr<CefBrowser> ChromiumHandler::GetBrowser() const
 {
-     return this->_browser;
+    return this->_browser;
 }
 
 CefRefPtr<CefContextMenuHandler> ChromiumHandler::GetContextMenuHandler()
@@ -206,9 +206,6 @@ void ChromiumHandler::OnAfterCreated(CefRefPtr<CefBrowser> browser)
     {
         this->_browser = browser; /* We need to keep the main child window, but not popup windows */
         this->_browserid = browser->GetIdentifier();
-
-        if(this->_listener)
-            this->_listener->OnAfterCreated();
     }
     else if(browser->IsPopup())
         _popupbrowsers.push_back(browser); /* Add to the list of popup browsers */
@@ -275,27 +272,24 @@ void ChromiumHandler::OnLoadStart(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFr
 {
     CEF_REQUIRE_UI_THREAD();
 
-    if((this->_browserid == browser->GetIdentifier()) && frame->IsMain())
-        this->SetLoading(true);
+    if((this->_browserid == browser->GetIdentifier()) && frame->IsMain() && this->_listener)
+        this->_listener->OnLoadStart(frame);
 }
 
 void ChromiumHandler::OnLoadEnd(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, int httpstatuscode)
 {
     CEF_REQUIRE_UI_THREAD();
 
-    if((this->_browserid == browser->GetIdentifier()) && frame->IsMain())
-        this->SetLoading(false);
+    if((this->_browserid == browser->GetIdentifier()) && frame->IsMain() && this->_listener)
+        this->_listener->OnLoadEnd(frame, httpstatuscode);
 }
 
 void ChromiumHandler::OnLoadError(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefLoadHandler::ErrorCode errorcode, const CefString &errortext, const CefString &failedurl)
 {
     CEF_REQUIRE_UI_THREAD();
 
-    if(errorcode == ERR_ABORTED)
-        return;
-
-    if(errorcode == ERR_UNKNOWN_URL_SCHEME)
-        qDebug() << Q_FUNC_INFO << " ERR_UNKNOWN_URL_SCHEME";
+    if((this->_browserid == browser->GetIdentifier()) && frame->IsMain() && this->_listener)
+        this->_listener->OnLoadError(frame, errorcode, errortext, failedurl);
 }
 
 bool ChromiumHandler::GetViewRect(CefRefPtr<CefBrowser>, CefRect &rect)

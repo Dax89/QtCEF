@@ -49,17 +49,7 @@ void ChromiumWebView::OnTitleChange(const QString &title)
 
 }
 
-void ChromiumWebView::SetLoading(bool isloading)
-{
-
-}
-
 void ChromiumWebView::SetNavState(bool cangoback, bool cangoforward)
-{
-
-}
-
-void ChromiumWebView::OnAfterCreated()
 {
 
 }
@@ -81,6 +71,21 @@ void ChromiumWebView::OnPaint(CefRenderHandler::PaintElementType type, const Cef
 }
 
 void ChromiumWebView::OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo)
+{
+
+}
+
+void ChromiumWebView::OnLoadStart(CefRefPtr<CefFrame> frame)
+{
+
+}
+
+void ChromiumWebView::OnLoadEnd(CefRefPtr<CefFrame> frame, int httpstatuscode)
+{
+
+}
+
+void ChromiumWebView::OnLoadError(CefRefPtr<CefFrame> frame, CefLoadHandler::ErrorCode errorcode, const CefString &errortext, const CefString &failedurl)
 {
 
 }

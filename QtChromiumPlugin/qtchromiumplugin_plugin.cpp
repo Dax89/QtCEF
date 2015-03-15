@@ -6,5 +6,6 @@
 void QtChromiumPluginPlugin::registerTypes(const char *uri)
 {
     // @uri QtChromium
+    qmlRegisterUncreatableType<LoadRequest>(uri, 1, 0, "LoadRequest", "");
     qmlRegisterType<QQuickChromiumWebView>(uri, 1, 0, "ChromiumWebView");
 }

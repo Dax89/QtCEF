@@ -1,13 +1,5 @@
 #include "chromiumhandler.h"
 
-void ChromiumHandler::SetLoading(bool isloading)
-{
-    if(!this->_listener)
-        return;
-
-    this->_listener->SetLoading(isloading);
-}
-
 void ChromiumHandler::SetNavState(bool cangoback, bool cangoforward)
 {
     if(!this->_listener)

@@ -44,6 +44,9 @@ ApplicationWindow
                 text: "Go"
 
                 onClicked: {
+                    if(tfurl.text.indexOf("http://") === -1)
+                        tfurl.text = "http://" + tfurl.text;
+
                     chromiumwebview.url = tfurl.text;
                 }
             }
@@ -57,6 +60,15 @@ ApplicationWindow
 
             onUrlChanged: {
                 tfurl.text = url;
+            }
+
+            onLoadingChanged: {
+                if(loadRequest.loadStatus === LoadRequest.LoadStartedStatus)
+                    console.log("Load Started");
+                else if(loadRequest.loadStatus === LoadRequest.LoadFailedStatus)
+                    console.log("Load Failed");
+                else if(loadRequest.loadStatus === LoadRequest.LoadSucceededStatus)
+                    console.log("Load Succeeded");
             }
 
             onTitleChanged: {

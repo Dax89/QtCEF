@@ -32,6 +32,7 @@ class ChromiumWebView : public QGLWidget, public ChromiumHandler::Listener
         virtual void OnAfterCreated();
         virtual bool GetViewRect(CefRect &rect);
         virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height);
+        virtual void OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo);
         virtual void OnMessageEvent(ChromiumMessageEvent* e);
 
     protected:

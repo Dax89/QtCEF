@@ -34,6 +34,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
                 virtual void OnAfterCreated() = 0;
                 virtual bool GetViewRect(CefRect &rect) = 0;
                 virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height) = 0;
+                virtual void OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo) = 0;
                 virtual void OnMessageEvent(ChromiumMessageEvent* e) = 0;
         };
 
@@ -104,6 +105,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
     public: /* CefRenderHandler Methods */
         virtual bool GetViewRect(CefRefPtr<CefBrowser>, CefRect &rect);
         virtual void OnPaint(CefRefPtr<CefBrowser>, PaintElementType type, const RectList &dirtyRects, const void *buffer, int width, int height);
+        virtual void OnCursorChange(CefRefPtr<CefBrowser>, unsigned long, CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo);
 
     public: /* CefRequestHandler Methods */
           virtual CefRefPtr<CefResourceHandler> GetResourceHandler(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request);

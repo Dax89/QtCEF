@@ -30,13 +30,14 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         void setUrl(const QString& url);
 
     public: /* ChromiumHandler::Listener Methods */
-        virtual void OnAddressChange(const QString& url);
+        virtual void OnAddressChange(const QString&);
         virtual void OnTitleChange(const QString& title);
         virtual void SetLoading(bool isloading);
         virtual void SetNavState(bool cangoback, bool cangoforward);
         virtual void OnAfterCreated();
         virtual bool GetViewRect(CefRect &rect);
         virtual void OnPaint(CefRenderHandler::PaintElementType type, const CefRenderHandler::RectList &dirtyrects, const void *buffer, int width, int height);
+        virtual void OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &);
         virtual void OnMessageEvent(ChromiumMessageEvent* e);
 
     protected:

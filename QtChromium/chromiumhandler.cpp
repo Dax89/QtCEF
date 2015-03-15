@@ -314,6 +314,14 @@ void ChromiumHandler::OnPaint(CefRefPtr<CefBrowser>, CefRenderHandler::PaintElem
         this->_listener->OnPaint(type, dirtyrects, buffer, width, height);
 }
 
+void ChromiumHandler::OnCursorChange(CefRefPtr<CefBrowser>, unsigned long, CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo)
+{
+    CEF_REQUIRE_UI_THREAD();
+
+    if(this->_listener)
+        this->_listener->OnCursorChange(type, customcursorinfo);
+}
+
 CefRefPtr<CefResourceHandler> ChromiumHandler::GetResourceHandler(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request)
 {
     return NULL;

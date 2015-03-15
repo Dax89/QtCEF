@@ -75,6 +75,11 @@ void ChromiumWebView::OnPaint(CefRenderHandler::PaintElementType type, const Cef
     this->update();
 }
 
+void ChromiumWebView::OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo &customcursorinfo)
+{
+
+}
+
 void ChromiumWebView::OnMessageEvent(ChromiumMessageEvent *e)
 {
     qApp->postEvent(this, e, Qt::HighEventPriority);

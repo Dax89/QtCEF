@@ -64,7 +64,7 @@ void QQuickChromiumWebView::createBrowser()
     CefBrowserHost::CreateBrowserSync(windowinfo, this->_handler.get(), "https://www.google.it", browsersettings, NULL);
 }
 
-void QQuickChromiumWebView::OnAddressChange(const QString &url)
+void QQuickChromiumWebView::OnAddressChange(const QString &)
 {
     emit urlChanged();
 }
@@ -122,6 +122,76 @@ void QQuickChromiumWebView::OnPaint(CefRenderHandler::PaintElementType type, con
     this->_texwidth = width;
     this->_texheight = height;
     this->update();
+}
+
+void QQuickChromiumWebView::OnCursorChange(CefRenderHandler::CursorType type, const CefCursorInfo&)
+{
+    switch(type)
+    {
+        case CT_CROSS:
+            this->setCursor(Qt::CrossCursor);
+            break;
+
+        case CT_IBEAM:
+            this->setCursor(Qt::IBeamCursor);
+            break;
+
+        case CT_WAIT:
+            this->setCursor(Qt::WaitCursor);
+            break;
+
+        case CT_PROGRESS:
+            this->setCursor(Qt::BusyCursor);
+            break;
+
+        case CT_HAND:
+            this->setCursor(Qt::PointingHandCursor);
+            break;
+
+        case CT_GRAB:
+            this->setCursor(Qt::OpenHandCursor);
+            break;
+
+        case CT_GRABBING:
+            this->setCursor(Qt::ClosedHandCursor);
+            break;
+
+        case CT_NORTHSOUTHRESIZE:
+            this->setCursor(Qt::SizeVerCursor);
+            break;
+
+        case CT_EASTWESTRESIZE:
+            this->setCursor(Qt::SizeHorCursor);
+            break;
+
+        case CT_NORTHEASTRESIZE:
+            this->setCursor(Qt::SizeBDiagCursor);
+            break;
+
+        case CT_NORTHWESTRESIZE:
+            this->setCursor(Qt::SizeFDiagCursor);
+            break;
+
+        case CT_MOVE:
+            this->setCursor(Qt::SizeAllCursor);
+            break;
+
+        case CT_NOTALLOWED:
+            this->setCursor(Qt::ForbiddenCursor);
+            break;
+
+        case CT_ROWRESIZE:
+            this->setCursor(Qt::SplitVCursor);
+            break;
+
+        case CT_COLUMNRESIZE:
+            this->setCursor(Qt::SplitVCursor);
+            break;
+
+        default:
+            this->setCursor(Qt::ArrowCursor);
+            break;
+    }
 }
 
 void QQuickChromiumWebView::OnMessageEvent(ChromiumMessageEvent *e)

@@ -224,12 +224,11 @@ void QQuickChromiumWebView::mousePressEvent(QMouseEvent *mouseevent)
     browser->GetHost()->SendMouseClickEvent(cefmouseevent, this->getMouseButtons(mouseevent), false, 1);
 }
 
-void QQuickChromiumWebView::mouseMoveEvent(QMouseEvent *mouseevent)
+void QQuickChromiumWebView::hoverMoveEvent(QHoverEvent *hoverevent)
 {
     CefMouseEvent cefmouseevent;
-    cefmouseevent.x = mouseevent->x();
-    cefmouseevent.y = mouseevent->y();
-    cefmouseevent.modifiers = this->getMouseModifiers(mouseevent);
+    cefmouseevent.x = hoverevent->pos().x();
+    cefmouseevent.y = hoverevent->pos().y();
 
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
     browser->GetHost()->SendMouseMoveEvent(cefmouseevent, false);

@@ -45,8 +45,8 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         virtual void focusInEvent(QFocusEvent* focusevent);
         virtual void focusOutEvent(QFocusEvent* focusevent);
         virtual void mousePressEvent(QMouseEvent* mouseevent);
-        virtual void mouseMoveEvent(QMouseEvent *mouseevent);
         virtual void mouseReleaseEvent(QMouseEvent* mouseevent);
+        virtual void hoverMoveEvent(QHoverEvent *hoverevent);
         virtual void wheelEvent(QWheelEvent *wheelevent);
         virtual void keyPressEvent(QKeyEvent* keyevent);
 

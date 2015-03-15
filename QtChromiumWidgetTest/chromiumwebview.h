@@ -26,6 +26,7 @@ class ChromiumWebView : public QGLWidget, public ChromiumHandler::Listener
 
     public: /* ChromiumHandler::Listener Methods */
         virtual void OnAddressChange(const QString& url);
+        virtual void OnFaviconChange(const QUrl &url);
         virtual void OnTitleChange(const QString& title);
         virtual void SetLoading(bool isloading);
         virtual void SetNavState(bool cangoback, bool cangoforward);

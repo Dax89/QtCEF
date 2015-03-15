@@ -39,6 +39,11 @@ void ChromiumWebView::OnAddressChange(const QString &url)
 
 }
 
+void ChromiumWebView::OnFaviconChange(const QUrl &url)
+{
+
+}
+
 void ChromiumWebView::OnTitleChange(const QString &title)
 {
 

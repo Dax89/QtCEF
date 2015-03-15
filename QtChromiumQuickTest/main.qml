@@ -10,6 +10,7 @@ ApplicationWindow
     height: 480
     visible: true
 
+
     Column
     {
         anchors.fill: parent
@@ -20,12 +21,20 @@ ApplicationWindow
             id: row
             width: parent.width
             height: tfurl.height
-            spacing: 5
+
+            Image
+            {
+                id: favicon
+                source: chromiumwebview.favicon
+                width: parent.height
+                height: parent.height
+                fillMode: Image.PreserveAspectFit
+            }
 
             TextField
             {
                 id: tfurl
-                width: parent.width - btn.width
+                width: parent.width - btn.width - favicon.width
             }
 
             Button

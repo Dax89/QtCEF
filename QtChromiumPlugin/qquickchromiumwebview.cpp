@@ -42,6 +42,11 @@ QString QQuickChromiumWebView::title() const
     return this->_title;
 }
 
+const QUrl& QQuickChromiumWebView::favicon() const
+{
+    return this->_favicon;
+}
+
 QString QQuickChromiumWebView::url() const
 {
     CefRefPtr<CefBrowser> browser = this->_handler->GetBrowser();
@@ -67,6 +72,15 @@ void QQuickChromiumWebView::createBrowser()
 void QQuickChromiumWebView::OnAddressChange(const QString &)
 {
     emit urlChanged();
+}
+
+void QQuickChromiumWebView::OnFaviconChange(const QUrl &url)
+{
+    if(this->_favicon == url)
+        return;
+
+    this->_favicon = url;
+    emit faviconChanged();
 }
 
 void QQuickChromiumWebView::OnTitleChange(const QString &title)

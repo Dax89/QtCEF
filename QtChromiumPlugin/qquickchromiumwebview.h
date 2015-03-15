@@ -14,6 +14,7 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
     Q_DISABLE_COPY(QQuickChromiumWebView)
 
     Q_PROPERTY(QString url READ url WRITE setUrl NOTIFY urlChanged)
+    Q_PROPERTY(QUrl favicon READ favicon NOTIFY faviconChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
     Q_PROPERTY(bool canGoBack READ canGoBack NOTIFY canGoBackChanged)
@@ -26,11 +27,13 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         bool canGoBack() const;
         bool canGoForward() const;
         QString title() const;
+        const QUrl& favicon() const;
         QString url() const;
         void setUrl(const QString& url);
 
     public: /* ChromiumHandler::Listener Methods */
         virtual void OnAddressChange(const QString&);
+        virtual void OnFaviconChange(const QUrl& url);
         virtual void OnTitleChange(const QString& title);
         virtual void SetLoading(bool isloading);
         virtual void SetNavState(bool cangoback, bool cangoforward);
@@ -76,6 +79,7 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         void canGoBackChanged();
         void canGoForwardChanged();
         void loadingChanged();
+        void faviconChanged();
         void urlChanged();
         void titleChanged();
 
@@ -89,6 +93,7 @@ class QQuickChromiumWebView : public QQuickItem, public ChromiumHandler::Listene
         bool _cangoforward;
         bool _loading;
         QString _title;
+        QUrl _favicon;
 
     private:
         const void* _buffer;

@@ -4,6 +4,7 @@
 #include <set>
 #include <list>
 #include <QString>
+#include <QUrl>
 #include <QDebug>
 #include "include/cef_client.h"
 #include "include/base/cef_lock.h"
@@ -29,6 +30,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
                 virtual ~Listener() { }
                 virtual void OnAddressChange(const QString& url) = 0;
                 virtual void OnTitleChange(const QString& title) = 0;
+                virtual void OnFaviconChange(const QUrl& url) = 0;
                 virtual void SetLoading(bool isloading) = 0;
                 virtual void SetNavState(bool cangoback, bool cangoforward) = 0;
                 virtual void OnAfterCreated() = 0;
@@ -72,6 +74,7 @@ class ChromiumHandler: public CefClient, public CefContextMenuHandler, public Ce
     public: /* CefDisplayHandler Methods */
         virtual void OnAddressChange(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& url); /* *** Qt Side *** */
         virtual void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title); /* *** Qt Side *** */
+        virtual void OnFaviconURLChange(CefRefPtr<CefBrowser> browser, const std::vector<CefString> &iconurls);  /* *** Qt Side *** */
         virtual bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& message, const CefString&, int);
 
     public: /* CefDownloadHandler Methods */

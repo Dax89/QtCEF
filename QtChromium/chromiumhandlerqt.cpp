@@ -37,3 +37,14 @@ void ChromiumHandler::OnTitleChange(CefRefPtr<CefBrowser> browser, const CefStri
     if(this->_browserid == browser->GetIdentifier())
         this->_listener->OnTitleChange(QString::fromStdString(title.ToString()));
 }
+
+void ChromiumHandler::OnFaviconURLChange(CefRefPtr<CefBrowser> browser, const std::vector<CefString> &iconurls)
+{
+    CEF_REQUIRE_UI_THREAD();
+
+    if(!this->_listener)
+        return;
+
+    if(this->_browserid == browser->GetIdentifier())
+        this->_listener->OnFaviconChange(QUrl(QString::fromStdString(iconurls.at(0).ToString())));
+}

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>BrowserTab.qml</file>
+        <file>NavigationBar.qml</file>
     </qresource>
 </RCC>

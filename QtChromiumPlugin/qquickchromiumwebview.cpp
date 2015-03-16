@@ -136,9 +136,9 @@ void QQuickChromiumWebView::OnAfterCreated()
 
 bool QQuickChromiumWebView::GetViewRect(CefRect &rect)
 {
-    QQuickWindow* window = this->window();
+    QRect r = this->boundingRect().toRect();
 
-    rect.Set(window->x(), window->y(), this->width(), this->height());
+    rect.Set(r.x(), r.y(), r.width(), r.height());
     return true;
 }
 
